@@ -50,18 +50,20 @@ namespace csharp_ecommerce_db
 
 
 
-        //info utente
+        //menu info utente
         public static void menuCustomerInfo(Customer user, int userId)
         {
             Console.WriteLine($"* * * {user.Name} {user.Surname} * * *");
 
             Console.WriteLine("\n1. Lista ordini");
-            Console.WriteLine("2. Modifica un ordine");
+            Console.WriteLine("2. Modifica lo stato di un ordine");
             Console.WriteLine("3. Cancella un ordine");
             Console.WriteLine("4. Torna al menù\n");
 
             int choice;
+            List<Order> customerOrders;
             choice = Menu.loopChoice(5);
+            
 
             switch (choice)
             {
@@ -75,12 +77,13 @@ namespace csharp_ecommerce_db
                     break;
                 case 2:
                     Console.Clear();
-
-
+                    customerOrders = Order.ListOrder(userId);
+                    Menu.modifyOrder(user, userId, customerOrders);
                     break;
                 case 3:
                     Console.Clear();
-                    Order.deleteOrder(user, userId);
+                    customerOrders = Order.ListOrder(userId);
+                    Menu.deleteOrder(user, userId, customerOrders);
                     break;
                 case 4:
                     Console.Clear();
@@ -88,6 +91,98 @@ namespace csharp_ecommerce_db
                     break;
 
             }
+        }
+
+
+
+
+        //menu eliminazione ordine
+        public static void deleteOrder(Customer user, int userId, List<Order> customerOrders)
+        {
+            if (customerOrders.Count > 0)
+            {
+                Console.WriteLine("\nQuale ordine vorresti eliminare?");
+                int choice;
+                choice = Menu.loopChoice(customerOrders.Count);
+
+                Order orderSelect = customerOrders[choice - 1];
+
+                Console.Clear();
+                Console.WriteLine($"Sei sicuro di voler elimianre l'ordine n.{orderSelect.OrderId}? (y/n)");
+                string confirm = Console.ReadLine();
+
+                switch (confirm)
+                {
+                    case "y":
+                        Order.removeOrder(orderSelect);
+                        Console.Clear();
+                        Console.WriteLine("Ordine cancellato!");
+                        break;
+                    case "n":
+                        Console.Clear();
+                        Console.WriteLine("Ordine non cancellato.");
+                        break;
+                    default:
+                        Console.Clear();
+                        Console.WriteLine("Input non corretto");
+                        break;
+                }
+            }
+
+            Console.WriteLine("\nPremi qualsiasi tasto per tornare al menù utente...");
+            Console.ReadKey();
+            Console.Clear();
+            Menu.menuCustomerInfo(user, userId);
+        }
+
+
+
+
+        //menu modifica status ordine
+        public static void modifyOrder(Customer user, int userId, List<Order> customerOrders)
+        {
+            Console.WriteLine("\nQuale ordine vorresti modificare?");
+            int choice;
+            choice = Menu.loopChoice(customerOrders.Count);
+
+            Order orderSelect = customerOrders[choice - 1];
+
+            Console.Clear();
+
+            Console.WriteLine($"* * * Ordine n.{orderSelect.OrderId} di {user.Name} {user.Surname} * * *");
+            Console.WriteLine($"{orderSelect.Date.ToString("d")}\t Totale: {orderSelect.Amount}\t ->{orderSelect.Status}\n");
+
+            Console.WriteLine("\nIn che stato è l'ordine?");
+            Console.WriteLine("1. In preparazione");
+            Console.WriteLine("2. Spedito");
+            Console.WriteLine("3 Consegnato\n");
+
+            int choice2;
+            choice2 = Menu.loopChoice(3);
+
+            switch (choice2)
+            {
+                case 1:
+                    orderSelect.Status = "In preparazione";
+                    break;
+                case 2:
+                    orderSelect.Status = "Spedito";
+                    break;
+                case 3:
+                    orderSelect.Status = "Consegnato";                    
+                    break;
+            }
+
+            Order.modifyOrderStatus(orderSelect);
+            Console.Clear();
+            Console.WriteLine("Ordine modificato con successo!\n");
+            Console.WriteLine($"* * * Ordine n.{orderSelect.OrderId} di {user.Name} {user.Surname} * * *");
+            Console.WriteLine($"{orderSelect.Date.ToString("d")}\t Totale: {orderSelect.Amount}\t ->{orderSelect.Status}\n");
+            Console.WriteLine("\nPremi qualsiasi tasto per tornare al menù utente...");
+            Console.ReadKey();
+            Console.Clear();
+            Menu.menuCustomerInfo(user, userId);
+
         }
 
 

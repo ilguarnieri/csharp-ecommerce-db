@@ -48,12 +48,14 @@ namespace csharp_ecommerce_db
 
 
         //recuperare la lista di tutti gli ordini effettuati da un cliente
-        public static void ListOrder(int userId)
+        public static List<Order> ListOrder(int userId)
         {
+            List<Order> customerOrders;
+
             using (EcommerceContext db = new EcommerceContext())
             {
                 Customer customer = db.Customers.Where(customer => customer.CustomerId == userId).First();
-                List<Order> customerOrders = db.Orders.Where(orders => orders.CustomerId == userId).ToList();
+                customerOrders = db.Orders.Where(orders => orders.CustomerId == userId).ToList();
 
                 Console.WriteLine($"{customer.Name} {customer.Surname} ha effettuato {customerOrders.Count} ordini");
 
@@ -66,84 +68,36 @@ namespace csharp_ecommerce_db
                     i++;
                 }
             }
+
+            return customerOrders;
         }
 
 
 
-
-        public static void deleteOrder(Customer user, int userId)
+        //rimuove ordine dal DB
+        public static void removeOrder(Order order)
         {
             using (EcommerceContext db = new EcommerceContext())
             {
-                Customer customer = db.Customers.Where(customer => customer.CustomerId == userId).First();
-                List<Order> customerOrders = db.Orders.Where(orders => orders.CustomerId == userId).ToList();
-
-                Console.WriteLine($"{customer.Name} {customer.Surname} ha effettuato {customerOrders.Count} ordini");
-
-                int i = 1;
-                foreach (Order order in customerOrders)
-                {
-                    Console.WriteLine($"\n {i}\t* * * Ordine n.{order.OrderId} * * *");
-                    Console.WriteLine($"\t{order.Date.ToString("d")}\t Totale: {order.Amount}\t ->{order.Status}");
-
-                    i++;
-                }
-
-                if(customerOrders.Count > 0)
-                {
-                    Console.WriteLine("\nQuale ordine vorresti eliminare?");
-                    int choice;
-                    choice = Menu.loopChoice(customerOrders.Count);
-
-                    Console.Clear();
-                    Console.WriteLine($"Sei sicuro di voler elimianre l'ordine n.{customerOrders[choice - 1].OrderId}? (y/n)");
-                    string confirm = Console.ReadLine();
-
-                    switch (confirm)
-                    {
-                        case "y":
-                            
-
-                            db.Remove(customerOrders[choice - 1]);
-                            db.SaveChanges();
-
-                            Console.Clear();
-
-                            Console.WriteLine("Ordine cancellato!");
-                            Console.WriteLine("\nPremi qualsiasi tasto per tornare al menù utente...");
-                            Console.ReadKey();
-                            Console.Clear();
-                            Menu.menuCustomerInfo(user, userId);
-                            break;
-                        case "n":
-                            Console.Clear();
-                            Console.WriteLine("Ordine non cancellato.");
-                            Console.WriteLine("\nPremi qualsiasi tasto per tornare al menù utente...");
-                            Console.ReadKey();
-                            Console.Clear();
-                            Menu.menuCustomerInfo(user, userId);
-                            break;
-                        default:
-                            Console.Clear();
-                            Console.WriteLine("Input non corretto");
-                            Console.WriteLine("\nPremi qualsiasi tasto per tornare al menù utente...");
-                            Console.ReadKey();
-                            Console.Clear();
-                            Menu.menuCustomerInfo(user, userId);
-                            break;
-                    }
-                }
-                else
-                {
-                    Console.WriteLine("\nPremi qualsiasi tasto per tornare al menù utente...");
-                    Console.ReadKey();
-                    Console.Clear();
-                    Menu.menuCustomerInfo(user, userId);
-                }
-                
+                db.Remove(order);
+                db.SaveChanges();
             }
-
         }
+
+
+
+
+        //modifica stato ordine DB
+        public static void modifyOrderStatus(Order order)
+        {
+            using (EcommerceContext db = new EcommerceContext())
+            {
+                db.Update(order);
+                db.SaveChanges();
+            }
+        }
+
+
 
 
 
@@ -247,7 +201,6 @@ namespace csharp_ecommerce_db
                 } while (numberOrder < 5);
             }
         }
-
 
 
     }    
