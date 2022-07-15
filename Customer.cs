@@ -53,5 +53,31 @@ namespace csharp_ecommerce_db
         }
 
 
+
+
+        public static void userChoice()
+        {
+            using(EcommerceContext db = new EcommerceContext())
+            {
+                List<Customer> customers = db.Customers.ToList();
+
+                Console.WriteLine("* * * LISTA UTENTI * * *");
+
+                for (int i = 0; i < customers.Count; i++)
+                {
+                    Console.WriteLine($"\n{i + 1}- {customers[i].Name} {customers[i].Surname}");
+                }
+
+
+                Console.WriteLine("\nSeleziona un utente");
+
+                int choice = Menu.loopChoice(customers.Count);
+                Console.Clear();
+
+                Menu.menuCustomerInfo(customers[choice - 1], customers[choice - 1].CustomerId);
+            }
+        }
+
+
     }
 }

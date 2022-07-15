@@ -43,5 +43,212 @@ namespace csharp_ecommerce_db
             CustomerId = customerId;
             this.Amount = amount;
         }
-    }
+
+
+
+
+        //recuperare la lista di tutti gli ordini effettuati da un cliente
+        public static void ListOrder(int userId)
+        {
+            using (EcommerceContext db = new EcommerceContext())
+            {
+                Customer customer = db.Customers.Where(customer => customer.CustomerId == userId).First();
+                List<Order> customerOrders = db.Orders.Where(orders => orders.CustomerId == userId).ToList();
+
+                Console.WriteLine($"{customer.Name} {customer.Surname} ha effettuato {customerOrders.Count} ordini");
+
+                int i = 1;
+                foreach (Order order in customerOrders)
+                {
+                    Console.WriteLine($"\n {i}\t* * * Ordine n.{order.OrderId} * * *");
+                    Console.WriteLine($"\t{order.Date.ToString("d")}\t Totale: {order.Amount}\t ->{order.Status}");
+
+                    i++;
+                }
+            }
+        }
+
+
+
+
+        public static void deleteOrder(Customer user, int userId)
+        {
+            using (EcommerceContext db = new EcommerceContext())
+            {
+                Customer customer = db.Customers.Where(customer => customer.CustomerId == userId).First();
+                List<Order> customerOrders = db.Orders.Where(orders => orders.CustomerId == userId).ToList();
+
+                Console.WriteLine($"{customer.Name} {customer.Surname} ha effettuato {customerOrders.Count} ordini");
+
+                int i = 1;
+                foreach (Order order in customerOrders)
+                {
+                    Console.WriteLine($"\n {i}\t* * * Ordine n.{order.OrderId} * * *");
+                    Console.WriteLine($"\t{order.Date.ToString("d")}\t Totale: {order.Amount}\t ->{order.Status}");
+
+                    i++;
+                }
+
+                if(customerOrders.Count > 0)
+                {
+                    Console.WriteLine("\nQuale ordine vorresti eliminare?");
+                    int choice;
+                    choice = Menu.loopChoice(customerOrders.Count);
+
+                    Console.Clear();
+                    Console.WriteLine($"Sei sicuro di voler elimianre l'ordine n.{customerOrders[choice - 1].OrderId}? (y/n)");
+                    string confirm = Console.ReadLine();
+
+                    switch (confirm)
+                    {
+                        case "y":
+                            
+
+                            db.Remove(customerOrders[choice - 1]);
+                            db.SaveChanges();
+
+                            Console.Clear();
+
+                            Console.WriteLine("Ordine cancellato!");
+                            Console.WriteLine("\nPremi qualsiasi tasto per tornare al menù utente...");
+                            Console.ReadKey();
+                            Console.Clear();
+                            Menu.menuCustomerInfo(user, userId);
+                            break;
+                        case "n":
+                            Console.Clear();
+                            Console.WriteLine("Ordine non cancellato.");
+                            Console.WriteLine("\nPremi qualsiasi tasto per tornare al menù utente...");
+                            Console.ReadKey();
+                            Console.Clear();
+                            Menu.menuCustomerInfo(user, userId);
+                            break;
+                        default:
+                            Console.Clear();
+                            Console.WriteLine("Input non corretto");
+                            Console.WriteLine("\nPremi qualsiasi tasto per tornare al menù utente...");
+                            Console.ReadKey();
+                            Console.Clear();
+                            Menu.menuCustomerInfo(user, userId);
+                            break;
+                    }
+                }
+                else
+                {
+                    Console.WriteLine("\nPremi qualsiasi tasto per tornare al menù utente...");
+                    Console.ReadKey();
+                    Console.Clear();
+                    Menu.menuCustomerInfo(user, userId);
+                }
+                
+            }
+
+        }
+
+
+
+
+        //CREAZIONE 5 ORDINI CON UTENTI E PRODOTTI CASUALI
+        public static void AddCasualOrder()
+        {
+            using (EcommerceContext db = new EcommerceContext())
+            {
+
+                List<Customer> customers = db.Customers.ToList();
+                List<Product> products = db.Products.ToList();
+
+
+                int numberOrder = 0;
+
+                //creare 5 ordini
+                do
+                {
+                    //scelta id utente random
+                    int customerIdRandom = new Random().Next(1, customers.Count + 1);
+
+                    //dati utente
+                    string customerName = customers[customerIdRandom - 1].Name;
+                    string customerSurname = customers[customerIdRandom - 1].Surname;
+                    customerIdRandom = customers[customerIdRandom - 1].CustomerId;
+
+                    //creazione lista ordine -prodotti
+                    List<OrderProduct> orderProducts = new List<OrderProduct>();
+
+                    decimal totalPrice = 0;
+                    int quantity;
+
+                    //numero random prodotti singoli - max 4 prodotti diversi ad ordine
+                    int numberProducts = new Random().Next(1, 5);
+
+                    Console.WriteLine($"\n* * * Carrello di {customerName} {customerSurname} * * *");
+
+                    while (orderProducts.Count < numberProducts)
+                    {
+                        int choiceProductId;
+                        bool cp;
+                        do
+                        {
+                            cp = false;
+                            //scelta del id prodotto random dalla lista
+                            choiceProductId = new Random().Next(0, products.Count);
+
+                            //controllo se id prodotto è presente nella lista 
+                            foreach (OrderProduct op in orderProducts)
+                            {
+                                if (products[choiceProductId].ProductId == op.ProductId)
+                                {
+                                    cp = true;
+                                }
+                            }
+
+                        } while (cp);
+
+                        //quantita singolo prodotto random - max 3 a prodotto
+                        quantity = new Random().Next(1, 4);
+
+                        //calcolo prezzo totale a prodotto
+                        decimal totaleArticolo = products[choiceProductId].Price * quantity;
+
+                        //calcolo prezzo totale carrello
+                        totalPrice += totaleArticolo;
+
+                        //creazione del istanza ordine - prodotti
+                        orderProducts.Add(new OrderProduct(products[choiceProductId].ProductId, numberOrder, quantity));
+
+                        Console.WriteLine($"\n{products[choiceProductId].Name} X {quantity} aggiunto nel carrello.");
+                        Console.WriteLine($"{products[choiceProductId].Price} EUR X {quantity} = {totaleArticolo} EUR");
+                    }
+
+                    //creazione singolo ordine e aggiunta db
+                    Order order = new Order(customerIdRandom, DateTime.Now, "in preparazione", totalPrice);
+                    db.Orders.Add(order);
+                    db.SaveChanges();
+
+                    //recupero del ultimo id ordine dal db
+                    Order lastOrder = db.Orders.OrderByDescending(orders => orders.OrderId).First();
+                    int lastOrderId = lastOrder.OrderId;
+
+                    //cambio id ordine del istanza e aggiunta pivot nel db
+                    foreach (OrderProduct op in orderProducts)
+                    {
+                        op.OrderID = lastOrderId;
+                        db.OrderProducts.Add(op);
+                        db.SaveChanges();
+                    }
+
+                    numberOrder++;
+
+                    Console.WriteLine($"\n- - - Totale carrello: {totalPrice} EUR - - -");
+                    Console.WriteLine($"Ordine {numberOrder} creato con successo e in preparazione!");
+                    Console.WriteLine("* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *\n\n");
+
+                    Thread.Sleep(1000);
+
+                } while (numberOrder < 5);
+            }
+        }
+
+
+
+    }    
 }
