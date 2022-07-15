@@ -26,6 +26,7 @@ namespace csharp_ecommerce_db
         public string Surname { get; set; }
 
         [Required]
+        [EmailAddress]
         [Column("email")]
         public string Email { get; set; }
 
@@ -38,5 +39,19 @@ namespace csharp_ecommerce_db
             Surname = surname;
             Email = email;
         }
+
+
+        public static void AddCustomer(string name, string surname, string email)
+        {
+            using (EcommerceContext db = new EcommerceContext())
+            {
+                Customer cust = new Customer(name, surname, email);
+                db.Add(cust);
+                db.SaveChanges();
+                Console.WriteLine($"{name} {surname} aggiunto con successo!");
+            }
+        }
+
+
     }
 }

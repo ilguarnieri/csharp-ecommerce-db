@@ -7,31 +7,17 @@
 
 using csharp_ecommerce_db;
 
-using (EcommerceContext db = new EcommerceContext())
-{
-    //creazione prodotti
-    Product prodotto1 = new Product("Vans", "Scarpe Vans uomo", 41.65);
-    Product prodotto2 = new Product("Adidas", "Scarpe Adidas uomo", 79.90);
-    Product prodott4 = new Product("Fila", "Scarpe Fila donna", 59.99);
-    Product prodotto3 = new Product("Giorgio Armani", "Scarpe Giorgio Armani donna", 239.48);
 
-    db.Add(prodotto1);
-    db.Add(prodotto2);
-    db.Add(prodotto3);
-    db.SaveChanges();
-    Console.WriteLine("Prodotti aggiunti nel db");
-
-    //creazione utenti
-    Customer utente1 = new Customer("Angelo", "Guarnieri", "ag@gmail.com");
-    Customer utente2 = new Customer("Marco", "Rossi", "mr@gmail.com");
-    Customer utente3 = new Customer("Viviana", "Verdi", "vv@gmail.com");
-
-    db.Add(utente1);
-    db.Add(utente2);
-    db.Add(utente3);
-    db.SaveChanges();
-    Console.WriteLine("Utenti aggiunti nel db");
+////creazione utenti
+//Customer.AddCustomer("Angelo", "Guarnieri", "ag@gmail.com");
+//Customer.AddCustomer("Marco", "Rossi", "mr@gmail.com");
+//Customer.AddCustomer("Viviana", "Verdi", "vv@gmail.com");
 
 
+////creazione prodotti    
+//Product.AddProduct("Vans", "Scarpe Vans uomo", "41,65");
+//Product.AddProduct("Adidas", "Scarpe Adidas uomo", "79,90");
+//Product.AddProduct("Fila", "Scarpe Fila donna", "59,99");
+//Product.AddProduct("Giorgio Armani", "Scarpe Giorgio Armani donna", "239,69");
 
-}
+

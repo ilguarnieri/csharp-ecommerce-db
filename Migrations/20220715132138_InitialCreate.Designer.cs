@@ -12,7 +12,7 @@ using csharp_ecommerce_db;
 namespace csharp_ecommerce_db.Migrations
 {
     [DbContext(typeof(EcommerceContext))]
-    [Migration("20220715120433_InitialCreate")]
+    [Migration("20220715132138_InitialCreate")]
     partial class InitialCreate
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -62,8 +62,8 @@ namespace csharp_ecommerce_db.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("OrderId"), 1L, 1);
 
-                    b.Property<int>("Amount")
-                        .HasColumnType("int")
+                    b.Property<decimal>("Amount")
+                        .HasColumnType("decimal(6,2)")
                         .HasColumnName("amount");
 
                     b.Property<int>("CustomerId")
@@ -74,8 +74,9 @@ namespace csharp_ecommerce_db.Migrations
                         .HasColumnType("datetime2")
                         .HasColumnName("date");
 
-                    b.Property<bool>("Status")
-                        .HasColumnType("bit")
+                    b.Property<string>("Status")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)")
                         .HasColumnName("status");
 
                     b.HasKey("OrderId");

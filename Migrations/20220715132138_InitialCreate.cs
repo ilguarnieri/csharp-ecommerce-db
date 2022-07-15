@@ -46,8 +46,8 @@ namespace csharp_ecommerce_db.Migrations
                     id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
                     date = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    amount = table.Column<int>(type: "int", nullable: false),
-                    status = table.Column<bool>(type: "bit", nullable: false),
+                    amount = table.Column<decimal>(type: "decimal(6,2)", nullable: false),
+                    status = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     customer_id = table.Column<int>(type: "int", nullable: false)
                 },
                 constraints: table =>

@@ -24,17 +24,29 @@ namespace csharp_ecommerce_db
         public string Description { get; set; }
 
         [Required]
-        [Column("price", TypeName = "double(6,2)")]
-        public double Price { get; set; }
+        [Column("price", TypeName = "decimal(6,2)")]
+        public decimal Price { get; set; }
 
         public List<OrderProduct> OrdersProducts { get; set; }
 
 
-        public Product(string name, string description, double price)
+        public Product(string name, string description, decimal price)
         {
             Name = name;
             Description = description;
             Price = price;
+        }
+
+
+        public static void AddProduct(string nameProduct, string description, string price)
+        {
+            using(EcommerceContext db = new EcommerceContext())
+            {
+                Product prd = new Product(nameProduct, description, decimal.Parse(price));
+                db.Add(prd);
+                db.SaveChanges();
+                Console.WriteLine($"Il prodotto {nameProduct} aggiunto con successo!");
+            }
         }
     }
 }
