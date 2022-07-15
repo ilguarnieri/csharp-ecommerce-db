@@ -1,8 +1,5 @@
-﻿//inserire almeno 3 prodotti diversi
-//inserire almeno 5 ordini su almeno 2 utenti diversi
+﻿
 
-//recuperare la lista di tutti gli ordini effettuati da un cliente
-//modificare l’ordine di un cliente
 //cancellare un ordine di un cliente
 //cancellare un prodotto su cui è attivo almeno un ordine
 
@@ -30,99 +27,128 @@ using csharp_ecommerce_db;
 
 
 
-//CREAZIONE 5 ORDINI CON UTENTI E PRODOTTI CASUALI
-using (EcommerceContext db = new EcommerceContext())
+////CREAZIONE 5 ORDINI CON UTENTI E PRODOTTI CASUALI
+//using (EcommerceContext db = new EcommerceContext())
+//{
+
+//    List<Customer> customers = db.Customers.ToList();
+//    List<Product> products = db.Products.ToList();
+
+
+//    int numberOrder = 0;
+
+//    //creare 5 ordini
+//    do
+//    {
+//        //scelta id utente random
+//        int customerIdRandom = new Random().Next(1, customers.Count);
+
+//        //dati utente
+//        string customerName = customers[customerIdRandom].Name;
+//        string customerSurname = customers[customerIdRandom].Surname;
+//        customerIdRandom = customers[customerIdRandom].CustomerId;
+
+//        //creazione lista ordine -prodotti
+//        List<OrderProduct> orderProducts = new List<OrderProduct>();
+
+//        decimal totalPrice = 0;
+//        int quantity;
+
+//        //numero random prodotti singoli - max 4 prodotti diversi ad ordine
+//        int numberProducts = new Random().Next(1, 5);
+
+//        Console.WriteLine($"\n* * * Carrello di {customerName} {customerSurname} * * *");
+
+//        while (orderProducts.Count() < numberProducts)
+//        {
+//            int choiceProductId;
+//            bool cp;
+//            do
+//            {
+//                cp = false;
+//                //scelta del id prodotto random dalla lista
+//                choiceProductId = new Random().Next(0, products.Count);
+
+//                //controllo se id prodotto è presente nella lista 
+//                foreach (OrderProduct op in orderProducts)
+//                {
+//                    if (products[choiceProductId].ProductId == op.ProductId)
+//                    {
+//                        cp = true;
+//                    }
+//                }
+
+//            } while (cp);
+
+//            //quantita singolo prodotto random - max 3 a prodotto
+//            quantity = new Random().Next(1, 4);
+
+//            //calcolo prezzo totale a prodotto
+//            decimal totaleArticolo = products[choiceProductId].Price * quantity;
+
+//            //calcolo prezzo totale carrello
+//            totalPrice += totaleArticolo;
+
+//            //creazione del istanza ordine - prodotti
+//            orderProducts.Add(new OrderProduct(products[choiceProductId].ProductId, numberOrder, quantity));
+
+//            Console.WriteLine($"\n{products[choiceProductId].Name} X {quantity} aggiunto nel carrello.");
+//            Console.WriteLine($"{products[choiceProductId].Price} EUR X {quantity} = {totaleArticolo} EUR");
+//        }
+
+//        //creazione singolo ordine e aggiunta db
+//        Order order = new Order(customerIdRandom, DateTime.Now, "in preparazione", totalPrice);
+//        db.Orders.Add(order);
+//        db.SaveChanges();
+
+//        //recupero del ultimo id ordine dal db
+//        Order lastOrder = db.Orders.OrderByDescending(orders => orders.OrderId).First();
+//        int lastOrderId = lastOrder.OrderId;
+
+//        //cambio id ordine del istanza e aggiunta pivot nel db
+//        foreach (OrderProduct op in orderProducts)
+//        {
+//            op.OrderID = lastOrderId;
+//            db.OrderProducts.Add(op);
+//            db.SaveChanges();
+//        }
+
+//        numberOrder++;
+
+//        Console.WriteLine($"\n- - - Totale carrello: {totalPrice} EUR - - -");
+//        Console.WriteLine($"Ordine {numberOrder} creato con successo e in preparazione!");
+//        Console.WriteLine("* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *\n\n");
+
+//        Thread.Sleep(1000);
+
+//    } while (numberOrder < 5);
+//}
+
+
+
+//recuperare la lista di tutti gli ordini effettuati da un cliente
+void ListOrder(int customerId)
 {
-
-    List<Customer> customers = db.Customers.ToList();
-    List<Product> products = db.Products.ToList();
-
-
-    int numberOrder = 0;
-
-    //creare 5 ordini
-    do
+    using (EcommerceContext db = new EcommerceContext())
     {
-        //scelta id utente random
-        int customerIdRandom = new Random().Next(1, customers.Count);
+        Customer customer = db.Customers.Where(customer => customer.CustomerId == customerId).First();
+        List<Order> customerOrders = db.Orders.Where(orders => orders.CustomerId == customerId).ToList();
 
-        //dati utente
-        string customerName = customers[customerIdRandom].Name;
-        string customerSurname = customers[customerIdRandom].Surname;
-        customerIdRandom = customers[customerIdRandom].CustomerId;
-        
-        //creazione lista ordine -prodotti
-        List<OrderProduct> orderProducts = new List<OrderProduct>();
+        Console.WriteLine($"{customer.Name} {customer.Surname} ha effettuato {customerOrders.Count} ordini");
 
-        decimal totalPrice = 0;
-        int quantity;
-
-        //numero random prodotti singoli - max 4 prodotti diversi ad ordine
-        int numberProducts = new Random().Next(1, 5);
-
-        Console.WriteLine($"\n* * * Carrello di {customerName} {customerSurname} * * *");
-
-        while (orderProducts.Count() < numberProducts)
+        foreach (Order order in customerOrders)
         {
-            int choiceProductId;
-            bool cp;
-            do
-            {
-                cp = false;
-                //scelta del id prodotto random dalla lista
-                choiceProductId = new Random().Next(0, products.Count);
-
-                //controllo se id prodotto è presente nella lista 
-                foreach (OrderProduct op in orderProducts)
-                {
-                    if (products[choiceProductId].ProductId == op.ProductId)
-                    {
-                        cp = true;
-                    }
-                }
-
-            } while (cp);
-
-            //quantita singolo prodotto random - max 3 a prodotto
-            quantity = new Random().Next(1, 4);
-
-            //calcolo prezzo totale a prodotto
-            decimal totaleArticolo = products[choiceProductId].Price * quantity;
-
-            //calcolo prezzo totale carrello
-            totalPrice += totaleArticolo;
-
-            //creazione del istanza ordine - prodotti
-            orderProducts.Add(new OrderProduct(products[choiceProductId].ProductId, numberOrder, quantity));
-
-            Console.WriteLine($"\n{products[choiceProductId].Name} X {quantity} aggiunto nel carrello.");
-            Console.WriteLine($"{products[choiceProductId].Price} EUR X {quantity} = {totaleArticolo} EUR");
+            Console.WriteLine($"\n* * * Ordine n.{order.OrderId} * * *");
+            Console.WriteLine($"{order.Date.ToString("d")}\t Totale: {order.Amount}\t ->{order.Status}");
         }
-
-        //creazione singolo ordine e aggiunta db
-        Order order = new Order(customerIdRandom, DateTime.Now, "in preparazione", totalPrice);
-        db.Orders.Add(order);
-        db.SaveChanges();
-
-        //recupero del ultimo id ordine dal db
-        Order lastOrder = db.Orders.OrderByDescending(orders => orders.OrderId).First();
-        int lastOrderId = lastOrder.OrderId;
-
-        //cambio id ordine del istanza e aggiunta pivot nel db
-        foreach (OrderProduct op in orderProducts)
-        {
-            op.OrderID = lastOrderId;
-            db.OrderProducts.Add(op);
-            db.SaveChanges();
-        }
-
-        numberOrder++;
-
-        Console.WriteLine($"\n- - - Totale carrello: {totalPrice} EUR - - -");
-        Console.WriteLine($"Ordine {numberOrder} creato con successo e in preparazione!");
-        Console.WriteLine("* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *\n\n");
-
-        Thread.Sleep(1000);
-
-    } while (numberOrder < 5);
+    }
 }
+
+
+
+ListOrder(8);
+
+
+
+
+//modificare l’ordine di un cliente
