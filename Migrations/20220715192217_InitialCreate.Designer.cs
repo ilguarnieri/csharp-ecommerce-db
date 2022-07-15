@@ -12,7 +12,7 @@ using csharp_ecommerce_db;
 namespace csharp_ecommerce_db.Migrations
 {
     [DbContext(typeof(EcommerceContext))]
-    [Migration("20220715132138_InitialCreate")]
+    [Migration("20220715192217_InitialCreate")]
     partial class InitialCreate
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -63,12 +63,11 @@ namespace csharp_ecommerce_db.Migrations
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("OrderId"), 1L, 1);
 
                     b.Property<decimal>("Amount")
-                        .HasColumnType("decimal(6,2)")
+                        .HasColumnType("decimal(8,2)")
                         .HasColumnName("amount");
 
                     b.Property<int>("CustomerId")
-                        .HasColumnType("int")
-                        .HasColumnName("customer_id");
+                        .HasColumnType("int");
 
                     b.Property<DateTime>("Date")
                         .HasColumnType("datetime2")

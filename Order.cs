@@ -16,11 +16,13 @@ namespace csharp_ecommerce_db
         [Column("id")]
         public int OrderId { get; set; }
 
+        public int CustomerId { get; set; }
+        public Customer Customer { get; set; }
+
         [Required]
         [Column("date")]
         public DateTime Date { get; set; }
 
-        [Required]
         [Column("amount", TypeName = "decimal(8,2)")]
         public decimal Amount { get; set; }
 
@@ -30,17 +32,16 @@ namespace csharp_ecommerce_db
 
         [Required]
         [Column("customer_id")]
-        public int CustomerId { get; set; }
-        public Customer Customer { get; set; }
 
         public List<OrderProduct> OrdersProducts { get; set; }
 
 
-        public Order(int customerId, DateTime date, string status)
+        public Order(int customerId, DateTime date, string status, decimal amount)
         {
             Date = date;
             Status = status;
             CustomerId = customerId;
+            this.Amount = amount;
         }
     }
 }

@@ -61,12 +61,11 @@ namespace csharp_ecommerce_db.Migrations
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("OrderId"), 1L, 1);
 
                     b.Property<decimal>("Amount")
-                        .HasColumnType("decimal(6,2)")
+                        .HasColumnType("decimal(8,2)")
                         .HasColumnName("amount");
 
                     b.Property<int>("CustomerId")
-                        .HasColumnType("int")
-                        .HasColumnName("customer_id");
+                        .HasColumnType("int");
 
                     b.Property<DateTime>("Date")
                         .HasColumnType("datetime2")
