@@ -58,7 +58,7 @@ namespace csharp_ecommerce_db
 
             if (products.Count > 0)
             {
-                Console.WriteLine("\nQuale prodotto vuoi definitivamente dal Database?");
+                Console.WriteLine("\nQuale prodotto vuoi definitivamente cancellare dal Database?");
 
                 int Choice = Menu.loopChoice(products.Count);
 
