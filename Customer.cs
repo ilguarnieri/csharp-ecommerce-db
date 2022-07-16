@@ -54,7 +54,7 @@ namespace csharp_ecommerce_db
 
 
 
-
+        //SELEZIONE UTENTE
         public static void userChoice()
         {
             using(EcommerceContext db = new EcommerceContext())

@@ -47,7 +47,7 @@ namespace csharp_ecommerce_db
 
 
 
-        //recuperare la lista di tutti gli ordini effettuati da un cliente
+        //RECUPERA LA LISTA DI TUTTI GLI ORDINI DI UN UTENTE
         public static List<Order> ListOrder(int userId)
         {
             List<Order> customerOrders;
@@ -74,7 +74,7 @@ namespace csharp_ecommerce_db
 
 
 
-        //rimuove ordine dal DB
+        //ELIMINA UN ORDINE DAL DB
         public static void removeOrder(Order order)
         {
             using (EcommerceContext db = new EcommerceContext())
@@ -87,7 +87,7 @@ namespace csharp_ecommerce_db
 
 
 
-        //modifica stato ordine DB
+        //MODIFICA STATO ORDINE DB
         public static void modifyOrderStatus(Order order)
         {
             using (EcommerceContext db = new EcommerceContext())

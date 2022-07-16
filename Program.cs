@@ -1,7 +1,6 @@
 ﻿
 using csharp_ecommerce_db;
 
-
 ////AGGIUNTA UTENTI DB
 //Customer.AddCustomer("Angelo", "Guarnieri", "ag@gmail.com");
 //Customer.AddCustomer("Marco", "Rossi", "mr@gmail.com");
@@ -20,6 +19,8 @@ using csharp_ecommerce_db;
 //Product.AddProduct("Vans", "Scarpe Vans donna", "49,99");
 //Product.AddProduct("Versace Jeans", "Scarpe Versace Unisex", "289,78");
 //Product.AddProduct("Giorgio Armani", "Scarpe Giorgio Armani donna", "239,69");
+
+
 
 Menu.MainMenu();
 

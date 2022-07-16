@@ -37,5 +37,20 @@ namespace csharp_ecommerce_db
             OrderID = orderID;
             Quantity = quantity;
         }
+
+
+
+
+
+        public static void stampList()
+        {
+            //stampare lista prodotti con group by sul product id e recupero info dal db dei singoli prodotti
+            using (EcommerceContext db = new EcommerceContext())
+            {
+                
+            }
+        }
+
+
     }
 }
