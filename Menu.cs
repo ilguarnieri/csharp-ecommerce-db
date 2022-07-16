@@ -36,7 +36,8 @@ namespace csharp_ecommerce_db
                     Customer.userChoice();
                     break;
                 case 3:
-
+                    Console.Clear();
+                    Menu.menuDeleteProduct();
                     break;
                 case 4:
                     Console.Clear();
@@ -50,11 +51,52 @@ namespace csharp_ecommerce_db
 
 
 
-        //MENU CANCELLAZIONE PRODOTTO DB
+        //MENU CANCELLAZIONE PRODOTTO
         public static void menuDeleteProduct()
         {
-            
+            List<Product> products = OrderProduct.stampListProduct();
+
+            if (products.Count > 0)
+            {
+                Console.WriteLine("\nQuale prodotto vuoi definitivamente dal Database?");
+
+                int Choice = Menu.loopChoice(products.Count);
+
+                Console.Clear();
+
+                Console.WriteLine($"Confermi che vuoi eliminare {products[Choice - 1].Name}? (y/n)\n");
+
+                string confirm = Console.ReadLine();
+
+                switch (confirm)
+                {
+                    case "y":
+                        Product.removeProduct(products[Choice - 1]);
+                        Console.Clear();
+                        Console.WriteLine("Prodotto cancellato!");
+                        break;
+                    case "n":
+                        Console.Clear();
+                        Console.WriteLine("Prodotto non cancellato.");
+                        break;
+                    default:
+                        Console.Clear();
+                        Console.WriteLine("Input non corretto");
+                        break;
+                }
+
+            }
+            else
+            {
+                Console.WriteLine("\n\nNon ci sono prodotti da cancellare...");
+            }
+
+            Console.WriteLine("\nPremi qualsiasi tasto per toranre indietro...");
+            Console.ReadKey();
+            Console.Clear();
+            Menu.MainMenu();
         }
+
 
 
 
@@ -62,7 +104,7 @@ namespace csharp_ecommerce_db
         //MENU INFO SPECIFICHE UTENTE
         public static void menuCustomerInfo(Customer user, int userId)
         {
-            Console.WriteLine($"* * * {user.Name} {user.Surname} * * *");
+            Console.WriteLine($"* * * {user.Name.ToUpper()} {user.Surname.ToUpper()} * * *");
 
             Console.WriteLine("\n1. Lista ordini");
             Console.WriteLine("2. Modifica lo stato di un ordine");
@@ -117,7 +159,7 @@ namespace csharp_ecommerce_db
                 Order orderSelect = customerOrders[choice - 1];
 
                 Console.Clear();
-                Console.WriteLine($"Sei sicuro di voler elimianre l'ordine n.{orderSelect.OrderId}? (y/n)");
+                Console.WriteLine($"Sei sicuro di voler elimianre l'ordine n.{orderSelect.OrderId}? (y/n)\n");
                 string confirm = Console.ReadLine();
 
                 switch (confirm)

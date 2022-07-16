@@ -48,7 +48,6 @@ namespace csharp_ecommerce_db
                 Customer cust = new Customer(name, surname, email);
                 db.Add(cust);
                 db.SaveChanges();
-                Console.WriteLine($"\n{name} {surname} aggiunto con successo!");
             }
         }
 

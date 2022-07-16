@@ -45,8 +45,21 @@ namespace csharp_ecommerce_db
                 Product prd = new Product(nameProduct, description, decimal.Parse(price));
                 db.Add(prd);
                 db.SaveChanges();
-                Console.WriteLine($"\nIl prodotto {nameProduct} aggiunto con successo!");
             }
         }
+
+
+
+        //ELIMINA PRODOTTO DAL DB
+        public static void removeProduct(Product product)
+        {
+            using (EcommerceContext db = new EcommerceContext())
+            {
+                db.Remove(product);
+                db.SaveChanges();
+            }
+        }
+
+
     }
 }
