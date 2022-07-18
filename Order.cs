@@ -16,6 +16,7 @@ namespace csharp_ecommerce_db
         [Column("id")]
         public int OrderId { get; set; }
 
+        [Column("customer_id")]
         public int CustomerId { get; set; }
         public Customer Customer { get; set; }
 
@@ -29,9 +30,6 @@ namespace csharp_ecommerce_db
         [Required]
         [Column("status")]
         public string Status { get; set; }
-
-        [Required]
-        [Column("customer_id")]
 
         public List<OrderProduct> OrdersProducts { get; set; }
 
